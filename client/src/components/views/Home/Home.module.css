@@ -1,0 +1,47 @@
+/* global */
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 8vh;
+  margin-top: 20px;
+}
+
+.title {
+  margin: 0px;
+}
+
+.name {
+  padding: 5px 10px;
+}
+
+/* map */
+.map {
+  width: 99%;
+  height: 75vh;
+  margin: auto;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+/* mapUpdateBtn */
+.mapUpdateBtn {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.recommend {
+  width: 8vh;
+  height: 8vh;
+  border-radius: 50%;
+}
+
+.searchRoute {
+  width: 8vh;
+  height: 8vh;
+  border-radius: 50%;
+}
