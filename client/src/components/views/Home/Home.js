@@ -16,11 +16,14 @@ const exceptedCategory = [
 ];
 
 function Home() {
+  const [selected, setSelected] = useState({});
   const reducers = useSelector((state) => state);
   const dispatch = useDispatch();
 
   const container = document.getElementById('map');
+  const dialog = document.querySelector('dialog');
   let map;
+  let marker;
 
   const filterCategory = (restaurant) => {
     let flag = false;
@@ -51,7 +54,7 @@ function Home() {
       {
         y: latitude,
         x: longitude,
-        radius: 400,
+        radius: 1000,
       }
     );
   };
@@ -74,7 +77,7 @@ function Home() {
 
   const markRestaurant = (restaurant) => {
     const markerPos = new kakao.maps.LatLng(restaurant.y, restaurant.x);
-    const marker = new kakao.maps.Marker({
+    marker = new kakao.maps.Marker({
       position: markerPos,
     });
     marker.setMap(map);
@@ -90,10 +93,17 @@ function Home() {
         Math.floor(Math.random() * reducers.restaurants.length)
       ];
     markRestaurant(restaurant, map);
+    setSelected(restaurant);
+    dialog.showModal();
   };
 
   const onClicks = () => {
-    console.log(reducers);
+    console.log(selected);
+    dialog.showModal();
+  };
+
+  const linkTo = () => {
+    window.location.href = `https://map.kakao.com/link/to/${selected.id}`;
   };
 
   useEffect(() => {
@@ -139,6 +149,11 @@ function Home() {
         <button className={styles.recommend} onClick={restaurantRecommend}>
           추천해줘
         </button>
+        <dialog>
+          <h1>{selected.place_name}</h1>
+          <h2>{selected.distance}미터 떨어짐</h2>
+          <button onClick={linkTo}>길찾기</button>
+        </dialog>
       </div>
     </div>
   );
