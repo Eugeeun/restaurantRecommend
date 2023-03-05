@@ -23,7 +23,6 @@ function Home() {
   const container = document.getElementById('map');
   const dialog = document.querySelector('dialog');
   let map;
-  let marker;
 
   const filterCategory = (restaurant) => {
     let flag = false;
@@ -77,22 +76,35 @@ function Home() {
 
   const markRestaurant = (restaurant) => {
     const markerPos = new kakao.maps.LatLng(restaurant.y, restaurant.x);
-    marker = new kakao.maps.Marker({
+    const marker = new kakao.maps.Marker({
       position: markerPos,
     });
     marker.setMap(map);
+
+    kakao.maps.event.addListener(marker, 'click', () => {
+      setSelected(restaurant);
+      dialog.showModal();
+    });
+
+    const markerTitle = document.createElement('div');
+    markerTitle.innerText = restaurant.place_name.split(' ')[0];
+
+    const infowindow = new kakao.maps.InfoWindow({
+      content: markerTitle,
+    });
+
+    kakao.maps.event.addListener(marker, 'mouseover', () =>
+      infowindow.open(map, marker)
+    );
+    kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
   };
 
-  const markRestaurants = () => {
-    reducers.restaurants.forEach(markRestaurant);
-  };
-
+  const markRestaurants = () => reducers.restaurants.forEach(markRestaurant);
   const restaurantRecommend = () => {
     const restaurant =
       reducers.restaurants[
         Math.floor(Math.random() * reducers.restaurants.length)
       ];
-    markRestaurant(restaurant, map);
     setSelected(restaurant);
     dialog.showModal();
   };
