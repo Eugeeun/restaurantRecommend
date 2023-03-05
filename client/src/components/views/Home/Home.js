@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { setCurrPosition, setNearRestaurants } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Home.module.css';
@@ -23,6 +23,8 @@ function Home() {
   const container = document.getElementById('map');
   const dialog = document.querySelector('dialog');
   let map;
+  let markers = [];
+  let isMarked = false;
 
   const filterCategory = (restaurant) => {
     let flag = false;
@@ -36,8 +38,8 @@ function Home() {
   };
 
   const getNearRestaurants = (latitude, longitude) => {
-    let places = new kakao.maps.services.Places();
-    let restaurants = [];
+    const places = new kakao.maps.services.Places();
+    const restaurants = [];
 
     places.categorySearch(
       'FD6',
@@ -97,9 +99,28 @@ function Home() {
       infowindow.open(map, marker)
     );
     kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
+
+    return marker;
   };
 
-  const markRestaurants = () => reducers.restaurants.forEach(markRestaurant);
+  const removeMarker = (marker) => {
+    marker.setMap(null);
+  };
+
+  const markRestaurants = () => {
+    markers.forEach(removeMarker);
+    markers = [];
+
+    if (isMarked) {
+      isMarked = !isMarked;
+      return;
+    }
+    reducers.restaurants.forEach((restaurant) =>
+      markers.push(markRestaurant(restaurant))
+    );
+    isMarked = !isMarked;
+  };
+
   const restaurantRecommend = () => {
     const restaurant =
       reducers.restaurants[
@@ -110,8 +131,7 @@ function Home() {
   };
 
   const onClicks = () => {
-    console.log(selected);
-    dialog.showModal();
+    markers.forEach(removeMarker);
   };
 
   const linkTo = () => {
