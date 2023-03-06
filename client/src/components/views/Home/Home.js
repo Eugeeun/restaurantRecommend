@@ -185,6 +185,7 @@ function Home() {
           <h1>{selected.place_name}</h1>
           <h2>{selected.distance}미터 떨어짐</h2>
           <button onClick={linkTo}>길찾기</button>
+          <button onClick={() => dialog.close()}>닫기</button>
         </dialog>
       </div>
     </div>
