@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { setCurrPosition, setNearRestaurants } from '../../../store';
 import { useDispatch, useSelector } from 'react-redux';
+import Axios from 'axios';
 import styles from './Home.module.css';
 
 const { kakao } = window;
@@ -76,6 +77,17 @@ function Home() {
     getCurPos();
   };
 
+  const restaurantInsertOrUpdate = (restaurant) => {
+    Axios.post('/api/restaurant/insertOrUpdate', restaurant).then(
+      (response) => {
+        if (!response.data.success) {
+          alert('식당 저장에 실패했습니다.');
+          return;
+        }
+      }
+    );
+  };
+
   const markRestaurant = (restaurant) => {
     const markerPos = new kakao.maps.LatLng(restaurant.y, restaurant.x);
     const marker = new kakao.maps.Marker({
@@ -85,6 +97,7 @@ function Home() {
 
     kakao.maps.event.addListener(marker, 'click', () => {
       setSelected(restaurant);
+      restaurantInsertOrUpdate(restaurant);
       dialog.showModal();
     });
 
@@ -127,6 +140,7 @@ function Home() {
         Math.floor(Math.random() * reducers.restaurants.length)
       ];
     setSelected(restaurant);
+    restaurantInsertOrUpdate(restaurant);
     dialog.showModal();
   };
 
