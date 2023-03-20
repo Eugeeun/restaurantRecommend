@@ -97,6 +97,7 @@ function Home() {
 
     kakao.maps.event.addListener(marker, 'click', () => {
       setSelected(restaurant);
+      // console.log(restaurant);
       restaurantInsertOrUpdate(restaurant);
       dialog.showModal();
     });
