@@ -20,4 +20,12 @@ router.post('/insertOrUpdate', (req, res) => {
   });
 });
 
+router.post('/visitRestaurant', (req, res) => {
+  const query = `update restaurant set VISIT_COUNT = VISIT_COUNT+1 WHERE ID = ${req.body.id};`;
+  connect.query(query, (err, rows, fields) => {
+    if (err) res.status(400).json({ success: false });
+    res.status(200).json({ success: true });
+  });
+});
+
 module.exports = router;

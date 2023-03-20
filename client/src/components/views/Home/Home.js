@@ -147,9 +147,16 @@ function Home() {
 
   const onClicks = () => {
     markers.forEach(removeMarker);
+    console.log(selected);
   };
 
   const linkTo = () => {
+    Axios.post('/api/restaurant/visitRestaurant', selected).then((response) => {
+      if (!response.data.success) {
+        alert('길찾기 저장에 실패했습니다.');
+        return;
+      }
+    });
     window.location.href = `https://map.kakao.com/link/to/${selected.id}`;
   };
 
